@@ -1,0 +1,3 @@
+todo
+
+If a class doesn't hve an implementation for a method, should the class implement a blank/dummy method? Or should it populate that method with NULL? Probably the former; it seems safer and more complete.

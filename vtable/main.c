@@ -1,97 +1,39 @@
+#include "object.h"
+#include "object1.h"
+#include "object2.h"
 #include <stdio.h>
 
-typedef struct PrintStruct * PrintPointer;
-
-//Struct definitions
-typedef struct PrintInterface
-{
-  void (*print)(int i);
-  void (*print_double)(int i);
-} PrintInterface;
-
-typedef struct PrintStruct {
-  PrintInterface interface;
-  int i;
-} PrintStruct;
-
-//Fucntion Prototypes
-void PrintStruct_Print(PrintPointer p);
-void PrintStruct_PrintDouble(PrintPointer p);
-
-static void simple_print(int i);
-static void simple_print_double(int i);
-static void fancy_print(int i);
-static void fancy_print_double(int i);
-
-
-//Struct declarations
-PrintInterface simple_interface = {
-  .print = simple_print,
-  .print_double = simple_print_double
-};
-
-PrintInterface fancy_interface = {
-  .print = fancy_print,
-  .print_double = fancy_print_double
-};
-
-//Main!
 int main(void)
 {
-  PrintStruct simple_print_struct = {
-    .interface = simple_interface,
-    .i = 7
-  };
-  PrintPointer simple_print_pointer = &simple_print_struct;
+  int integer;
+  int *integer_ptr = &integer;
+  int new_integer = 42;
+  Object obj1 = Object1_Create();
 
-  PrintStruct fancy_print_struct = {
-    .interface = fancy_interface,
-    .i = 42
-  };
-  PrintPointer fancy_print_pointer= &fancy_print_struct;
+  char character;
+  char *character_ptr = &character;
+  char new_character = 'c';
+  Object obj2 = Object2_Create();
 
-  printf("Hello, world!\n\n");
+  printf("\nWorking with integers:\n");
+  Object_Get(obj1, (void *)integer_ptr);
+  printf("Get data before setting: %d\n", integer);
+  Object_Set(obj1, (void *)&new_integer);
+  Object_Get(obj1, (void *)integer_ptr);
+  printf("Get data after setting: %d\n", integer);
+  Object_Double(obj1);
+  Object_Get(obj1, (void *)integer_ptr);
+  printf("Get data after doubling: %d\n", integer);
 
-  printf("%s\n", "Simple print:");
-  PrintStruct_Print(simple_print_pointer);
-  PrintStruct_PrintDouble(simple_print_pointer);
+  printf("\nWorking with characters:\n");
+  Object_Get(obj2, (void *)character_ptr);
+  printf("Get data before setting: %c\n", character);
+  Object_Set(obj2, (void *)&new_character);
+  Object_Get(obj2, (void *)character_ptr);
+  printf("Get data after setting: %c\n", character);
+  Object_Double(obj2);
+  Object_Get(obj2, (void *)character_ptr);
+  printf("Get data after doubling: %c\n", character);
 
-  printf("%s\n", "\nFancy print:");
-  PrintStruct_Print(fancy_print_pointer);
-  PrintStruct_PrintDouble(fancy_print_pointer);
-
-  printf("\n");
   return 0;
-}
-
-//Public functions
-void PrintStruct_Print(PrintPointer p)
-{
-  p->interface.print(p->i);
-}
-
-void PrintStruct_PrintDouble(PrintPointer p)
-{
-  p->interface.print_double(p->i);
-}
-
-//Internal functions
-static void simple_print(int i)
-{
-  printf("%d\n", i);
-}
-
-static void simple_print_double(int i)
-{
-  printf("%d\n", 2*i);
-}
-
-static void fancy_print(int i)
-{
-  printf("The value is: %d\n", i);
-}
-
-static void fancy_print_double(int i)
-{
-  printf("The value is: %d\n", 2*i);
 }
