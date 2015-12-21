@@ -1,19 +1,30 @@
 #include <stdio.h>
 
-//Prototypes
-void simple_print(int i);
-void simple_print_double(int i);
-void fancy_print(int i);
-void fancy_print_double(int i);
+typedef struct PrintStruct * PrintPointer;
 
-//Struct definition
+//Struct definitions
 typedef struct PrintInterface
 {
   void (*print)(int i);
   void (*print_double)(int i);
 } PrintInterface;
 
-//Public struct declarations
+typedef struct PrintStruct {
+  PrintInterface interface;
+  int i;
+} PrintStruct;
+
+//Fucntion Prototypes
+void PrintStruct_Print(PrintPointer p);
+void PrintStruct_PrintDouble(PrintPointer p);
+
+static void simple_print(int i);
+static void simple_print_double(int i);
+static void fancy_print(int i);
+static void fancy_print_double(int i);
+
+
+//Struct declarations
 PrintInterface simple_interface = {
   .print = simple_print,
   .print_double = simple_print_double
@@ -27,34 +38,60 @@ PrintInterface fancy_interface = {
 //Main!
 int main(void)
 {
+  PrintStruct simple_print_struct = {
+    .interface = simple_interface,
+    .i = 7
+  };
+  PrintPointer simple_print_pointer = &simple_print_struct;
+
+  PrintStruct fancy_print_struct = {
+    .interface = fancy_interface,
+    .i = 42
+  };
+  PrintPointer fancy_print_pointer= &fancy_print_struct;
 
   printf("Hello, world!\n\n");
+
   printf("%s\n", "Simple print:");
-  simple_interface.print(1);
-  simple_interface.print_double(1);
+  PrintStruct_Print(simple_print_pointer);
+  PrintStruct_PrintDouble(simple_print_pointer);
+
   printf("%s\n", "\nFancy print:");
-  fancy_interface.print(1);
-  fancy_interface.print_double(1);
+  PrintStruct_Print(fancy_print_pointer);
+  PrintStruct_PrintDouble(fancy_print_pointer);
+
   printf("\n");
+  return 0;
 }
 
-//Helper functions
-void simple_print(int i)
+//Public functions
+void PrintStruct_Print(PrintPointer p)
+{
+  p->interface.print(p->i);
+}
+
+void PrintStruct_PrintDouble(PrintPointer p)
+{
+  p->interface.print_double(p->i);
+}
+
+//Internal functions
+static void simple_print(int i)
 {
   printf("%d\n", i);
 }
 
-void simple_print_double(int i)
+static void simple_print_double(int i)
 {
   printf("%d\n", 2*i);
 }
 
-void fancy_print(int i)
+static void fancy_print(int i)
 {
   printf("The value is: %d\n", i);
 }
 
-void fancy_print_double(int i)
+static void fancy_print_double(int i)
 {
   printf("The value is: %d\n", 2*i);
 }

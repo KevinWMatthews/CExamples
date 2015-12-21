@@ -1,9 +1,12 @@
 DEFAULT_TARGET:=all
-PHONY: all clean
+.PHONY: all clean
 
 all:
-	gcc main.c -o main
-	./main
+	gcc StrictTypes.c -o StrictTypes
+	./StrictTypes
+#	gcc main.c -o main
+#	./main
 
 clean:
-	rm main
+	rm StrictTypes
+#	rm main
